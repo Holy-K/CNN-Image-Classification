@@ -19,9 +19,11 @@ import os
 import cv2
 import keyboard
 
+
 #GPUの設定
 print('torch.cuda.is_available:',torch.cuda.is_available())
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
 
 #画像の前処理を定義
 data_transforms = {
@@ -56,11 +58,10 @@ print( 'to_tensor_transforms:', to_tensor_transforms)
 
 
 #カスタムデータセットの定義
-
 root = os.getcwd()
 class CustomDataset(torch.utils.data.Dataset):  
     classes = ['A', 'B']
-  
+
     def __init__(self, root, transform=None, train=True):
         # 指定する場合は前処理クラスを受け取る
         self.transform = transform
@@ -114,13 +115,13 @@ class CustomDataset(torch.utils.data.Dataset):
 # 訓練/テストデータのプロット
 def show(img):
     npimg = img.numpy()
-    #npimg =np.array(img)
     plt.imshow(np.transpose(npimg, (1,2,0)), interpolation='nearest')
 
-#訓練/テストデータのプロット
+
 while True:
     testProt_YorN=input('Do you need to test plot of your images? [Yes=0,No=1]\n')
     if str.isdigit(testProt_YorN) and int(testProt_YorN) == 0 :
+        #訓練データのプロット
         custom_dataset = CustomDataset(root, to_tensor_transforms, train=True)
         custom_loader = torch.utils.data.DataLoader(dataset=custom_dataset,
                                                     batch_size=5, 
@@ -139,7 +140,6 @@ while True:
         custom_loader = torch.utils.data.DataLoader(dataset=custom_dataset,
                                                     batch_size=5, 
                                                     shuffle=True)
-
         for i, (images, labels) in enumerate(custom_loader):
             print('These are test plots of val images:')
             print('Labels of showing pictures are',labels.numpy())
@@ -154,7 +154,7 @@ while True:
     else:
         print('Please enter the correct key.')
 
-#本処理
+
 #定義したDatasetとDataLoaderを使用
 custom_train_dataset = CustomDataset(root, data_transforms["train"], train=True)
 train_loader = torch.utils.data.DataLoader(dataset=custom_train_dataset,
@@ -164,12 +164,10 @@ custom_test_dataset = CustomDataset(root, data_transforms["val"],train=False)
 test_loader = torch.utils.data.DataLoader(dataset=custom_test_dataset,
                                            batch_size=5, 
                                            shuffle=False)
-
 for i, (images, labels) in enumerate(train_loader):
     print('images.size():',images.size())
     print('images[0].size():',images[0].size())    
     print('labels[0].item():',labels[0].item())
-    #ここに訓練などの処理をがくる
     break
 
 #ネットワークの定義
@@ -199,8 +197,7 @@ print('features(size_check).view(size_check.size(0), -1).size():',features(size_
 fc_size = features(size_check).view(size_check.size(0), -1).size()[1]
 print('fc_size:',fc_size,'\n')
 
-
-
+#アーキテクチャの定義
 num_classes = 2
 
 class AlexNet(nn.Module):
@@ -209,7 +206,7 @@ class AlexNet(nn.Module):
         super(AlexNet, self).__init__()
         self.features = nn.Sequential(
             nn.Conv2d(3, 64, kernel_size=11, stride=4, padding=2),
-            nn.ReLU(inplace=True),#調整された線形単位関数を要素ごとに適用します。
+            nn.ReLU(inplace=True),#調整された線形単位関数を要素ごとに適用
             nn.MaxPool2d(kernel_size=2, stride=2),
             nn.Conv2d(64, 192, kernel_size=5, padding=2),
             nn.ReLU(inplace=True),
@@ -241,9 +238,7 @@ class AlexNet(nn.Module):
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 net = AlexNet(num_classes, fc_size).to(device)
-
 criterion = nn.CrossEntropyLoss()
-
 #最適化関数を設定
 #optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9, weight_decay=5e-4)#lr:学習率。 学習率を大きくしすぎると発散し、小さくしすぎると収束まで遅くなる。
 optimizer = optim.Adam(net.parameters(), lr=1e-4, betas=(0.9, 0.99), eps=1e-09)
@@ -265,11 +260,9 @@ train_loss_list = []
 train_acc_list = []
 val_loss_list = []
 val_acc_list = []
-
 lastPrediction_labels=[] 
 image_number=0
 for epoch in range(num_epochs):
-
   #変数の初期化
     train_loss = 0
     train_acc = 0
