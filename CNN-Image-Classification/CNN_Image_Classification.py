@@ -344,9 +344,6 @@ while True:
         from tkinter import filedialog
         model_scripted = torch.jit.script(net) 
         now = datetime.datetime.now()
-        #iDir= os.getcwd()
-        #folder_name = tkinter.filedialog.askdirectory(initialdir=iDir)
-        #cd 'folder_name'
         model_scripted.save('Saved-TorchScriptModel_'+ now.strftime('%Y%m%d_%H%M%S') +'.pth') 
         print('Model is saved at',os.getcwd())
         break
