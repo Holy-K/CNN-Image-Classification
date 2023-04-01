@@ -119,7 +119,7 @@ def show(img):
 
 
 while True:
-    testProt_YorN=input('Do you need to test plot of your images? [Yes=0,No=1]\n')
+    testProt_YorN=input('\nDo you need to test plot of your images? [Yes=0,No=1]\n')
     if str.isdigit(testProt_YorN) and int(testProt_YorN) == 0 :
         #訓練データのプロット
         custom_dataset = CustomDataset(root, to_tensor_transforms, train=True)
@@ -129,7 +129,7 @@ while True:
         for i, (images, labels) in enumerate(custom_loader):
             print('These are test plots of train images:')
             print('Labels of showing pictures are',labels.numpy())
-            print('Close the window of Figure 1 if there are no problem.\n')
+            print('\nClose the window of Figure 1 if there are no problem.\n\n')
             show(torchvision.utils.make_grid(images, padding=1))
             plt.axis('off')
             plt.show()
@@ -143,7 +143,7 @@ while True:
         for i, (images, labels) in enumerate(custom_loader):
             print('These are test plots of val images:')
             print('Labels of showing pictures are',labels.numpy())
-            print('Close the window of Figure 1 if there are no problem.\n')
+            print('\nClose the window of Figure 1 if there are no problem.\n\n')
             show(torchvision.utils.make_grid(images, padding=1))
             plt.axis('off')
             plt.show()
@@ -249,13 +249,13 @@ print(net)
 
 #学習
 while True:
-    num_epochs = input('Enter the nonnegative integer of the epochs.(The higher the number, the longer it takes.)\n')
+    num_epochs = input('\nEnter the nonnegative integer of the epochs.(The higher the number, the longer it takes.)\n')
     if str.isdigit(num_epochs) and int(num_epochs) >= 0 :
         num_epochs = int(num_epochs)
         break
     else:
        print('Please enter the correct nonnegative integer.')
-print('Now learning...')
+print('\nNow learning...')
 train_loss_list = []
 train_acc_list = []
 val_loss_list = []
@@ -304,12 +304,14 @@ for epoch in range(num_epochs):
     train_acc_list.append(avg_train_acc)
     val_loss_list.append(avg_val_loss)
     val_acc_list.append(avg_val_acc)
-print('lastPrediction:',lastPrediction_labels)
+    print("LastPrediction:")
+for i in lastPrediction_labels:
+    print(i)
 
 
 #学習結果の可視化
 import matplotlib.pyplot as plt
-print('Close graphs if you want to continue.')
+print('\nClose graphs if you want to continue.\n\n')
 plt.figure()
 plt.plot(range(num_epochs), train_loss_list, color='blue', linestyle='-', label='train_loss')
 plt.plot(range(num_epochs), val_loss_list, color='green', linestyle='--', label='val_loss')
@@ -343,4 +345,4 @@ while True:
     elif str.isdigit( save_TorchScriptModel_YorN) and int( save_TorchScriptModel_YorN) == 1 :
         break
     else:
-      print('Please enter the correct key.')
+      print('\nPlease enter the correct key.\n\n')
